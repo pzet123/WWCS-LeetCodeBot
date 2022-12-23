@@ -1,8 +1,10 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const { token } = require('./config.json');
+const { token, clientId, guildId, channelId } = require('./config.json');
+const { generateLeetcodeDailyMessage } = require("./scheduled_events/dailyLeetcode.js");
 const leetcode = require("./leetcode.js");
+const cron = require("cron");
 
 
 const discordClient = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -11,10 +13,20 @@ discordClient.commands = new Collection();
 
 readCommands();
 
+let scheduledDailyLeetcode = new cron.CronJob("00 26 19 * * *", () => {
+    const generalChannel = discordClient.channels.cache.find(channel => channel.name === "general");
+    const randomProblemPromise = leetcode.getRandomProblem();
+    randomProblemPromise.then(function(randomProblem){
+        console.log(randomProblem);
+        generalChannel.send(generateLeetcodeDailyMessage(randomProblem));
+    });
 
+});
 
 async function test(){
-
+    await leetcode.init();
+    scheduledDailyLeetcode.start();
+    console.log(leetcode.getRandomProblem());
 }
 
 discordClient.on(Events.ClientReady, () => {
@@ -52,6 +64,10 @@ function readCommands(){
             console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
         }
     }
+}
+
+function parseProblem(problem){
+
 }
 
 discordClient.login(token);
