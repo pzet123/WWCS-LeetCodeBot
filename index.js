@@ -13,20 +13,27 @@ discordClient.commands = new Collection();
 
 readCommands();
 
-let scheduledDailyLeetcode = new cron.CronJob("00 26 19 * * *", () => {
-    const generalChannel = discordClient.channels.cache.find(channel => channel.name === "general");
-    const randomProblemPromise = leetcode.getRandomProblem();
-    randomProblemPromise.then(function(randomProblem){
-        console.log(randomProblem);
-        generalChannel.send(generateLeetcodeDailyMessage(randomProblem));
-    });
-
+let scheduledDailyLeetcode = new cron.CronJob("00 00 08 * * *", () => {
+    const generalChannel = discordClient.channels.cache.find(channel => channel.name === "🧠｜leetcode");
+    try{
+        const randomProblemPromise = leetcode.getRandomProblem();
+        randomProblemPromise.then(function(randomProblem){
+            console.log(randomProblem);
+            generalChannel.send(generateLeetcodeDailyMessage(randomProblem));
+        });
+    } catch (e){
+        const randomProblemPromise = leetcode.getRandomProblem();
+        console.log("Error while trying to send daily leetcode: " + e);
+        randomProblemPromise.then(function(randomProblem){
+            console.log(randomProblem);
+            generalChannel.send(generateLeetcodeDailyMessage(randomProblem));
+        });
+    }
 });
 
-async function test(){
+async function init(){
     await leetcode.init();
     scheduledDailyLeetcode.start();
-    console.log(leetcode.getRandomProblem());
 }
 
 discordClient.on(Events.ClientReady, () => {
@@ -66,10 +73,6 @@ function readCommands(){
     }
 }
 
-function parseProblem(problem){
-
-}
-
 discordClient.login(token);
 
-test();
+init();
