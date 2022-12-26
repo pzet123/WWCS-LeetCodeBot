@@ -4,7 +4,9 @@ const { EmbedBuilder } = require("discord.js");
 const leetcodeApi = require("./api.js");
 const { titleCase } = require("../utils/textUtils.js");
 
-const LEETCODE_PROBLEMS_URL = "https://leetcode.com/problems/";
+const LEETCODE_URL = "https://leetcode.com"
+const LEETCODE_PROBLEMS_URL = `${LEETCODE_URL}/problems/`;
+
 const EXAMPLE_REGEX = /\*\*Example \d+:/;
 
 function createProblemEmbed(titlePrefix, problem) {
@@ -49,6 +51,7 @@ function createUserEmbed(user) {
 
   return newEmbedBuilder()
   .setTitle(`LeetCode User - ${user.matchedUser.username}`)
+  .setURL(`${LEETCODE_URL}/${user.matchedUser.username}/`)
   .setThumbnail(user.matchedUser.profile.userAvatar)
   .addFields(
     { name: "Ranking", value: "" + user.matchedUser.profile.ranking },
