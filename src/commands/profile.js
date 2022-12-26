@@ -1,34 +1,27 @@
 const { SlashCommandBuilder } = require("discord.js");
 const leetcodeApi = require("../leetcode/api.js");
+const leetcodeMessages = require("../leetcode/messages.js");
+
+async function execute(interaction) {
+  interaction.deferReply();
+
+  const username =
+    interaction.options.getString("username") ?? "WWCodeSocLeetCodebot";
+  const user = await leetcodeApi.getUser(username);
+  const embed = leetcodeMessages.createUserEmbed(user);
+  await interaction.editReply({ embeds: [embed] });
+}
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("profile")
-    .setDescription("Returns profile of the leetcode user")
+    .setDescription("Returns the profile of a given LeetCode user")
     .addStringOption((option) =>
       option
         .setName("username")
-        .setDescription("username of leetcode user")
+        .setDescription("Username of LeetCode user")
         .setRequired(true)
     ),
-  async execute(interaction) {
-    const username =
-      interaction.options.getString("username") ?? "WWCodeSocLeetCodebot";
-    const user = await leetcodeApi.getUser(username);
-    await interaction.reply(user.matchedUser.profile.userAvatar);
-    await interaction.followUp(parseUser(user));
-  },
-};
 
-function parseUser(user) {
-  const recentSubmissions = user.recentSubmissionList;
-  userString = ">>> **Username**: " + user.matchedUser.username + "\n";
-  userString += "**Ranking**: " + user.matchedUser.profile.ranking + "\n";
-  userString += "**Recent submissions**: " + "\n";
-  for (let i = 0; i < Math.min(5, recentSubmissions.length); i++) {
-    userString += "- Submission " + (i + 1) + "\n";
-    userString += "-	**" + recentSubmissions[i].title + "**\n";
-    userString += "-	**Language**: " + recentSubmissions[i].lang + "\n\n";
-  }
-  return userString;
-}
+  execute,
+};

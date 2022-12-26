@@ -9,7 +9,7 @@ const leetcodeApi = require("./leetcode/api.js");
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-let scheduledDailyLeetcode = new cron.CronJob("00 00 08 * * *", () => postDaily(client));
+const scheduledDailyLeetcode = new cron.CronJob("00 00 08 * * *", () => postDaily(client));
 
 async function init() {
   // Read commands and log in the bot
