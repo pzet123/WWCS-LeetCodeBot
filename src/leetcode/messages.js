@@ -62,7 +62,7 @@ function createUserEmbed(user) {
 function postDaily(client, channelId) {
   client.channels.fetch(channelId).then((channel) => {
     try {
-      leetcodeApi.getRandomProblem().then((problem) => {
+      leetcodeApi.getDailyProblem().then((problem) => {
         const embed = createProblemEmbed("LeetCode Daily", problem);
         channel.send({ embeds: [embed] });
       });

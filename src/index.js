@@ -5,7 +5,6 @@ const cron = require("cron");
 
 const config = require("../config.json");
 const { postDaily } = require("./leetcode/messages.js");
-const leetcodeApi = require("./leetcode/api.js");
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -16,16 +15,13 @@ async function init() {
   client.commands = new Collection();
   readCommands();
   client.login(config.token);
-
-  // Initialise LeetCode API
-  await leetcodeApi.init();
-  scheduledDailyLeetcode.start();
-
-  postDaily(client, config.problem_channel);
 }
 
 client.on(Events.ClientReady, () => {
   console.log(`Logged in as ${client.user.tag}`);
+
+    // Start the schedule
+    scheduledDailyLeetcode.start();
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
