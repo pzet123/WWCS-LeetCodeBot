@@ -1,6 +1,6 @@
 const { decode } = require("html-entities");
 const { NodeHtmlMarkdown } = require("node-html-markdown");
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder, ThreadAutoArchiveDuration } = require("discord.js");
 const leetcodeApi = require("./api.js");
 const { titleCase } = require("../utils/textUtils.js");
 
@@ -64,7 +64,12 @@ function postDaily(client, channelId) {
     try {
       leetcodeApi.getDailyProblem().then((problem) => {
         const embed = createProblemEmbed("LeetCode Daily", problem);
-        channel.send({ embeds: [embed] });
+        channel.send({ embeds: [embed] }).then((message) => {
+          message.startThread({
+            name: message.embeds[0].title,
+            autoArchiveDuration: ThreadAutoArchiveDuration.ThreeDays
+          });
+        });
       });
     } catch (err) {
       console.error("Error while trying to send daily leetcode: " + err);
