@@ -8,8 +8,13 @@ async function execute(interaction) {
   const username =
     interaction.options.getString("username") ?? "WWCodeSocLeetCodebot";
   const user = await leetcodeApi.getUser(username);
-  const embed = leetcodeMessages.createUserEmbed(user);
-  await interaction.editReply({ embeds: [embed] });
+  if(user.matchedUser){
+    const embed = leetcodeMessages.createUserEmbed(user);
+    await interaction.editReply({ embeds: [embed] });
+  } else {
+    await interaction.editReply(`User *${username}* not found!`);
+  }
+
 }
 
 module.exports = {
