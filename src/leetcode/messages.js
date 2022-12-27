@@ -42,7 +42,7 @@ function createProblemEmbed(titlePrefix, problem) {
 }
 
 function createUserEmbed(user) {
-  let recentSubmissions = "";
+  let recentSubmissions = user.recentSubmissionList.length > 0 ? "" : "None";
   for (let i = 0; i < Math.min(5, user.recentSubmissionList.length); i++) {
     recentSubmissions += `- Submission ${(i + 1)}\n`;
     recentSubmissions += `-	** ${user.recentSubmissionList[i].title}**\n`;
