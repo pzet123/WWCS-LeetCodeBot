@@ -1,6 +1,7 @@
 {
     "token": [string],
-    "client_id": [string],
-    "guild_id": [string (snowflake)]
-    "problem_channel": [string (snowflake)]
+    "clientId": [string],
+    "guildId": [string (snowflake)]
+    "problemChannel": [string (snowflake)],
+    "calendarId": [string (google calendar id)]
 }

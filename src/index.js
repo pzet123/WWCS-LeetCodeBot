@@ -30,7 +30,7 @@ client.on(Events.ClientReady, () => {
     scheduledCalendarUpdate.start();
 
     // Perform an instant calendar update
-    updateCalendar(client, config.guildId);
+    updateCalendar(client, config.guildId, config.calendarId);
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {

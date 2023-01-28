@@ -67,20 +67,20 @@ async function authorize() {
   return client;
 }
 
-async function getCalendarEvents() {
+async function getCalendarEvents(calendarId) {
   const auth = await authorize();
   const calendar = google.calendar({ version: "v3", auth });
   const res = await calendar.events.list({
-    calendarId: "kim8h0qrkcsocf683vjuagremg@group.calendar.google.com",
+    calendarId: calendarId,
     timeMin: new Date().toISOString(),
   });
   return res.data.items;
 }
 
-function updateCalendar(client, guildId) {
+function updateCalendar(client, guildId, calendarId) {
   client.guilds.fetch(guildId).then((guild) => {
     guild.scheduledEvents.fetch().then((existingEvents) => {
-      getCalendarEvents().then((events) => {
+      getCalendarEvents(calendarId).then((events) => {
         // no events found
         if (!events || events.length === 0) {
           return;
@@ -90,7 +90,7 @@ function updateCalendar(client, guildId) {
           if (!event.summary) {
             return;
           }
-          
+
           const prefixIndex =
             event.summary.indexOf("@") === -1
               ? 0
