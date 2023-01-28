@@ -5,10 +5,15 @@ const cron = require("cron");
 
 const config = require("../config.json");
 const { postDaily } = require("./leetcode/messages.js");
+const { updateCalendar } = require("./calendar/calendar.js");
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildScheduledEvents] });
 
+// Runs at 8am every day
 const scheduledDailyLeetcode = new cron.CronJob("00 00 08 * * *", () => postDaily(client, config.problemChannelId));
+
+// Runs on every fifth minute
+const scheduledCalendarUpdate = new cron.CronJob("*/5 * * * *", () => updateCalendar(client, config.guildId));
 
 async function init() {
   // Read commands and log in the bot
@@ -20,8 +25,12 @@ async function init() {
 client.on(Events.ClientReady, () => {
   console.log(`Logged in as ${client.user.tag}`);
 
-    // Start the schedule
+    // Start the cron jobs
     scheduledDailyLeetcode.start();
+    scheduledCalendarUpdate.start();
+
+    // Perform an instant calendar update
+    updateCalendar(client, config.guildId);
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
