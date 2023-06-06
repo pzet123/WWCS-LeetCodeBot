@@ -34,7 +34,7 @@ function createProblemEmbed(titlePrefix, problem) {
       { name: "Difficutly", value: problem.difficulty, inline: true },
       {
         name: "Topics",
-        value: problem.topicTags.map((tag) => tag.name).join(", "),
+        value: problem.topicTags.map((tag) => `||${tag.name}||`).join(", "),
         inline: true,
       }
     )
