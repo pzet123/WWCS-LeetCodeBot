@@ -13,7 +13,6 @@ for (const file of commandFiles) {
 
 const rest = new REST({ version: '10' }).setToken(token);
 
-// and deploy your commands!
 (async () => {
 	try {
 		console.log(`Started refreshing ${commands.length} application (/) commands.`);

@@ -10,7 +10,7 @@ const { updateCalendar } = require("./calendar/calendar.js");
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildScheduledEvents] });
 
 // Runs at 1am every day
-const scheduledDailyLeetcode = new cron.CronJob("00 05 00 * * *", () => postDaily(client, config.problemChannelId));
+const scheduledDailyLeetcode = new cron.CronJob("00 01 00 * * *", () => postDaily(client, config.problemChannelId));
 
 // Runs on every fifth minute
 const scheduledCalendarUpdate = new cron.CronJob("*/5 * * * *", () => updateCalendar(client, config.guildId));
@@ -25,12 +25,12 @@ async function init() {
 client.on(Events.ClientReady, () => {
   console.log(`Logged in as ${client.user.tag}`);
 
-    // Start the cron jobs
-    scheduledDailyLeetcode.start();
-    scheduledCalendarUpdate.start();
+  // Start the cron jobs
+  scheduledDailyLeetcode.start();
+  scheduledCalendarUpdate.start();
 
-    // Perform an instant calendar update
-    updateCalendar(client, config.guildId, config.calendarId);
+  // Perform an instant calendar update
+  updateCalendar(client, config.guildId, config.calendarId);
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {

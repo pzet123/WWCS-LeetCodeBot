@@ -4,6 +4,7 @@
   "description": "LeetCode Discord Bot for the Warwick Coding Society",
   "main": "index.js",
   "scripts": {
+    "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

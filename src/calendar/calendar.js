@@ -3,8 +3,6 @@ const path = require("path");
 const process = require("process");
 const { authenticate } = require("@google-cloud/local-auth");
 const { google } = require("googleapis");
-const { eventNames } = require("process");
-const { endianness } = require("os");
 const {
   GuildScheduledEventEntityType,
   GuildScheduledEventPrivacyLevel,
@@ -79,7 +77,7 @@ async function getCalendarEvents(calendarId) {
 
 function updateCalendar(client, guildId, calendarId) {
   client.guilds.fetch(guildId).then((guild) => {
-    guild.scheduledEvents.fetch().then((existingEvents) => {
+    guild.scheduledEvents?.fetch().then((existingEvents) => {
       getCalendarEvents(calendarId).then((events) => {
         // no events found
         if (!events || events.length === 0) {
